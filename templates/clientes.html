@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Clientes{% endblock %}
+
+{% block content %}
+<div class="row mt-2">
+    <div class="col-12">
+        <form class="form-inline" action="/" method="get">
+            <div class="input-group">
+                <input class="form-control rounded-left" type="text" placeholder="Atope o cliente:" name="search" value="{{ search_query }}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-success" type="submit">Buscar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+    <br> 
+{% if clientes %}
+<div class="table-responsive card">
+    <table class="table table-bordered table-striped" id="table">
+        <thead>
+            <tr>
+                <th scope="col">Nome e Apelidos</th>
+                <th scope="col">Cidade</th>
+                <th scope="col">País</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+                <tr>
+                    <td><a class="link-primary" href="{{ url_for('obtener_cliente_por_id', id=cliente.id) }}">{{ cliente.nombre }} {{ cliente.apellidos }}</a></td>
+                    <td>{{ cliente.ciudad }}</td>
+                    <td>{{ cliente.pais }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<br>
+    <nav aria-label="Page navigation" class="text-center">
+        <ul class="pagination justify-content-center">
+            {% if _page > 1 %}  
+                <li class="page-item">
+                    <a class="page-link" href="?_page={{ _page - 1 }}&search={{ search_query }}" aria-label="Anterior">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+            {% for page in pages %}
+                {% if page == _page %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">{{ page }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?_page={{ page }}&search={{ search_query }}">{{ page }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if _page < num_pages %}
+                <li class="page-item">
+                    <a class="page-link" href="?_page={{ _page + 1 }}&search={{ search_query }}" aria-label="Siguiente">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+{% else %}
+    <div class="alert alert-warning" role="alert">
+        Non se atoparon clientes.
+    </div>
+{% endif %}
+
+{% endblock %}
